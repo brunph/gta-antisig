@@ -16,8 +16,11 @@
 #include <unordered_map>
 #include <thread>
 #include <chrono>
+#include <functional>
 
 using namespace std::chrono_literals;
+
+#include "util/Log.hpp"
 
 namespace gta
 {

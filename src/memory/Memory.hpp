@@ -1,7 +1,7 @@
 #pragma once
 #include "../CommonIncludes.hpp"
 
-namespace memory
+namespace mem
 {
 	class Ptr
 	{
@@ -26,7 +26,7 @@ namespace memory
 		
 		operator bool ()
 		{
-			return isNull();
+			return !isNull();
 		}
 
 		[[nodiscard]] bool isNull() const
@@ -81,6 +81,25 @@ namespace memory
 			if (rel.has_value())
 				return this->add(rel.value()).add(this->as<int&>());
 			return this->add(4).add(this->as<int&>());
+		}
+		
+		bool write(void* data, size_t size) const
+		{
+			uint32_t oldProtect = 0;
+
+			if (VirtualProtect(this->as<void*>(), size, PAGE_EXECUTE_READWRITE, reinterpret_cast<DWORD*>(&oldProtect)) == TRUE)
+			{
+				std::memcpy(this->as<void*>(), data, size);
+
+				VirtualProtect(this->as<void*>(), size, oldProtect, nullptr);
+
+				// winapi docs said this is good to do
+				FlushInstructionCache(GetCurrentProcess(), nullptr, 0);
+
+				return true;
+			}
+
+			return false;
 		}
 	};
 
