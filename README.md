@@ -1,4 +1,4 @@
-## GTA-ANTISIG
+## gta-antisig
 
 > Disables a part of GTA5's anticheat system that is responsible for scanning the memory.
 
