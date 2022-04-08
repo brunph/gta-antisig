@@ -13,5 +13,5 @@
 * Github: [@yubie-re](https://github.com/yubie-re)
 
 ## Usage
-Compile and inject :)
+Compile and inject :)  
 Can be loaded both in online and in main menu/singleplayer
