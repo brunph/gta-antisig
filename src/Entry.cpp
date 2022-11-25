@@ -2,35 +2,15 @@
 #include "gta/Include.hpp"
 #include "memory/Include.hpp"
 
-void patchBonusString()
-{
-	static auto ptr = mem::scanForPtr("62 6F 6E 75 73 00");
-
-	if (!ptr)
-	{
-		util::log("didn't find bonus string, already written perhaps?");
-		return;
-	}
-
-	char str[] = "naahh";
-
-	ptr.write(str, 6);
-}
-
 void entryPoint()
 {
-	static auto tunables = mem::scanForPtr("48 8B 0D ? ? ? ? BF 02 00 00 00 44 8B C7").add(3).relative().as<rage::atSingleton<rage::CTunables>*>();
+	static auto sec = mem::scanForPtr("48 8B ? ? ? ? ? 33 F6 E9 ? ? ? ? 55 48 8D ? ? ? ? ? 48 87 2C 24 C3 48 8B 45 50 0F B6 00").add(3).relative().as<rage::atSingleton<rage::RageSecurity>*>();
 	
-	patchBonusString();
-
 	while (gta::g_Running)
 	{
-		if (tunables->isValid())
+		if (auto s = sec->getInstance(); sec->isValid())
 		{
-			if (const auto ptr = tunables->getInstance(); ptr)
-			{
-				ptr->m_bCount = 0;
-			}
+			s->m_interval = std::numeric_limits<uint32_t>::max();
 		}
 
 		std::this_thread::yield();
